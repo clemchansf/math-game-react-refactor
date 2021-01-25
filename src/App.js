@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './App.css';
 
 function App() {
@@ -8,6 +8,17 @@ function App() {
   const [userAnswer, setUserAnswer] = useState("")
   const [showError, setShowError] = useState(false)
   const answerField = useRef(null) /* for focusing on an element, React let us remember the field using ref */
+  const resetButton = useRef(null)
+
+  // useEffect
+  // first argument is a function we want to run, second argument is the condition for running the function
+  // -> second is a list of state attributes when updated will trigger the first function to run
+  useEffect(() => {
+    if (score === 10 || mistakesAllowed === 3) {
+      // want for 331 ms for overlay to run into view
+      setTimeout(() => resetButton.current.focus(), 331)
+    }
+  }, [score, mistakesAllowed])
 
   function generateNumber(max) {
     return Math.floor(Math.random() * (max + 1))
@@ -77,7 +88,7 @@ function App() {
       <div className={"overlay" + (mistakesAllowed === 3 || score === 10 ? " overlay--visible" : "")}>
         <div className="overlay-inner">
           <p className="end-message">{score === 10 ? "Congrats! You won." : "Sorry! You lost."}</p>
-          <button onClick={resetGame} className="reset-button">Start Over</button>
+          <button ref={resetButton} onClick={resetGame} className="reset-button">Start Over</button>
         </div>
       </div>
     </>
