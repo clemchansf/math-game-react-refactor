@@ -2,7 +2,11 @@ import { useState } from 'react'
 import './App.css';
 
 function App() {
+  const [score, setScore] = useState(0)
+  const [mistakesAllowed, setMistakesAllowed] = useState(0)
+
   const [currentProblem, setCurrentProblem] = useState(generateGame)
+  const [userValue, setUserValue] = useState("")
 
   function generateNumber(max) {
     return Math.floor(Math.random() * (max + 1))
@@ -15,18 +19,34 @@ function App() {
       operator: ['+', '-', 'x'][generateNumber(2)]
     }
   }
+
+  function handleSubmit(e) {
+    e.preventDefault()
+
+    let correctAnswer
+    if (currentProblem.operator === "+") correctAnswer = currentProblem.firstNumber + currentProblem.secondNumber
+    if (currentProblem.operator === "-") correctAnswer = currentProblem.firstNumber - currentProblem.secondNumber
+    if (currentProblem.operator === "*") correctAnswer = currentProblem.firstNumber * currentProblem.secondNumber
+
+    if (parseInt(userValue) === correctAnswer) {
+      setScore(prev => prev + 1)
+    } else {
+      setMistakesAllowed(prev => prev + 1)
+    }
+    setCurrentProblem(generateGame())
+    setUserValue("")
+  }
   return (
     <>
       <div className="main-ui">
         <p className="game">{currentProblem.firstNumber} {currentProblem.operator} {currentProblem.secondNumber}</p>
 
-        <form action="" className="game-form">
-          <input type="text" className="form-field" autoComplete="off" />
+        <form onSubmit={handleSubmit} action="" className="game-form">
+          <input value={userValue} onChange={e => setUserValue(e.target.value)} type="text" className="form-field" autoComplete="off" />
           <button>Submit</button>
         </form>
 
-        <p className="stat">You needs <span className="points-needed">10</span> more points, and are not allowed to make <span
-          className="mistakes-allowed">2</span> more mistakes.
+        <p className="stat">You needs {10 - score} more points, and are not allowed to make {(2 - mistakesAllowed) > 0 ? 2 - mistakesAllowed : 0} more mistakes.
         </p>
 
         <ProgressBar />
