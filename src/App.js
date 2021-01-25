@@ -6,7 +6,7 @@ function App() {
   const [mistakesAllowed, setMistakesAllowed] = useState(0)
 
   const [currentProblem, setCurrentProblem] = useState(generateGame)
-  const [userValue, setUserValue] = useState("")
+  const [userAnswer, setUserAnswer] = useState("")
 
   function generateNumber(max) {
     return Math.floor(Math.random() * (max + 1))
@@ -28,21 +28,25 @@ function App() {
     if (currentProblem.operator === "-") correctAnswer = currentProblem.firstNumber - currentProblem.secondNumber
     if (currentProblem.operator === "*") correctAnswer = currentProblem.firstNumber * currentProblem.secondNumber
 
-    if (parseInt(userValue) === correctAnswer) {
-      setScore(prev => prev + 1)
+    if (parseInt(userAnswer) === correctAnswer) {
+      setScore(prev => prev + 1) // to make state pure, use prev value
     } else {
       setMistakesAllowed(prev => prev + 1)
     }
     setCurrentProblem(generateGame())
-    setUserValue("")
+    setUserAnswer("")
   }
   return (
     <>
       <div className="main-ui">
         <p className="game">{currentProblem.firstNumber} {currentProblem.operator} {currentProblem.secondNumber}</p>
 
+        {/*  single source of truth is our data, not the DOM, we won't go through the DOM search path,
+             instead tie the html element with the state. When a related state attribute is updated.
+             React automatically updates the corresponding html element. see <input value={} .../>
+         */}
         <form onSubmit={handleSubmit} action="" className="game-form">
-          <input value={userValue} onChange={e => setUserValue(e.target.value)} type="text" className="form-field" autoComplete="off" />
+          <input value={userAnswer} onChange={e => setUserAnswer(e.target.value)} type="text" className="form-field" autoComplete="off" />
           <button>Submit</button>
         </form>
 
