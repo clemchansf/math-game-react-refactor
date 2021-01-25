@@ -36,6 +36,14 @@ function App() {
     setCurrentProblem(generateGame())
     setUserAnswer("")
   }
+
+  function resetGame() {
+    setScore(0)
+    setMistakesAllowed(0)
+    setUserAnswer("")
+    setCurrentProblem(generateGame())
+  }
+
   return (
     <>
       <div className={"main-ui" + ((mistakesAllowed === 3 || score === 10) ? " blurred" : "")}>
@@ -59,7 +67,7 @@ function App() {
       <div className={"overlay" + (mistakesAllowed === 3 || score === 10 ? " overlay--visible" : "")}>
         <div className="overlay-inner">
           <p className="end-message">{score === 10 ? "Congrats! You won." : "Sorry! You lost."}</p>
-          <button className="reset-button">Start Over</button>
+          <button onClick={resetGame} className="reset-button">Start Over</button>
         </div>
       </div>
     </>
