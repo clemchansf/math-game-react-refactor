@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './App.css';
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
   const [currentProblem, setCurrentProblem] = useState(generateGame)
   const [userAnswer, setUserAnswer] = useState("")
   const [showError, setShowError] = useState(false)
+  const answerField = useRef(null) /* for focusing on an element, React let us remember the field using ref */
 
   function generateNumber(max) {
     return Math.floor(Math.random() * (max + 1))
@@ -22,6 +23,8 @@ function App() {
 
   function handleSubmit(e) {
     e.preventDefault()
+
+    answerField.current.focus()
 
     let correctAnswer
     if (currentProblem.operator === "+") correctAnswer = currentProblem.firstNumber + currentProblem.secondNumber
@@ -44,6 +47,7 @@ function App() {
     setMistakesAllowed(0)
     setUserAnswer("")
     setCurrentProblem(generateGame())
+    answerField.current.focus()
   }
 
   return (
@@ -56,7 +60,11 @@ function App() {
              React automatically updates the corresponding html element. see <input value={} .../>
          */}
         <form onSubmit={handleSubmit} action="" className="game-form">
-          <input value={userAnswer} onChange={e => setUserAnswer(e.target.value)} type="text" className="form-field" autoComplete="off" />
+          {
+            /* React does not have a way to do element.focus(), the way in React is to use ref=
+             */
+          }
+          <input ref={answerField} value={userAnswer} onChange={e => setUserAnswer(e.target.value)} type="text" className="form-field" autoComplete="off" />
           <button>Submit</button>
         </form>
 
