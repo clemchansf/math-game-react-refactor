@@ -4,9 +4,9 @@ import './App.css';
 function App() {
   const [score, setScore] = useState(0)
   const [mistakesAllowed, setMistakesAllowed] = useState(0)
-
   const [currentProblem, setCurrentProblem] = useState(generateGame)
   const [userAnswer, setUserAnswer] = useState("")
+  const [showError, setShowError] = useState(false)
 
   function generateNumber(max) {
     return Math.floor(Math.random() * (max + 1))
@@ -32,6 +32,8 @@ function App() {
       setScore(prev => prev + 1) // to make state pure, use prev value
     } else {
       setMistakesAllowed(prev => prev + 1)
+      setShowError(true)
+      setTimeout(() => setShowError(false), 401)
     }
     setCurrentProblem(generateGame())
     setUserAnswer("")
@@ -47,7 +49,7 @@ function App() {
   return (
     <>
       <div className={"main-ui" + ((mistakesAllowed === 3 || score === 10) ? " blurred" : "")}>
-        <p className="game">{currentProblem.firstNumber} {currentProblem.operator} {currentProblem.secondNumber}</p>
+        <p className={"game" + (showError ? " animate-wrong" : "")}>{currentProblem.firstNumber} {currentProblem.operator} {currentProblem.secondNumber}</p>
 
         {/*  single source of truth is our data, not the DOM, we won't go through the DOM search path,
              instead tie the html element with the state. When a related state attribute is updated.
