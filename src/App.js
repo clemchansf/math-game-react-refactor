@@ -26,7 +26,7 @@ function App() {
     let correctAnswer
     if (currentProblem.operator === "+") correctAnswer = currentProblem.firstNumber + currentProblem.secondNumber
     if (currentProblem.operator === "-") correctAnswer = currentProblem.firstNumber - currentProblem.secondNumber
-    if (currentProblem.operator === "*") correctAnswer = currentProblem.firstNumber * currentProblem.secondNumber
+    if (currentProblem.operator === "x") correctAnswer = currentProblem.firstNumber * currentProblem.secondNumber
 
     if (parseInt(userAnswer) === correctAnswer) {
       setScore(prev => prev + 1) // to make state pure, use prev value
@@ -38,7 +38,7 @@ function App() {
   }
   return (
     <>
-      <div className="main-ui">
+      <div className={"main-ui" + ((mistakesAllowed === 3 || score === 10) ? " blurred" : "")}>
         <p className="game">{currentProblem.firstNumber} {currentProblem.operator} {currentProblem.secondNumber}</p>
 
         {/*  single source of truth is our data, not the DOM, we won't go through the DOM search path,
@@ -53,12 +53,12 @@ function App() {
         <p className="stat">You needs {10 - score} more points, and are not allowed to make {(2 - mistakesAllowed) > 0 ? 2 - mistakesAllowed : 0} more mistakes.
         </p>
 
-        <ProgressBar />
+        <ProgressBar score={score} />
       </div>
 
-      <div className="overlay">
+      <div className={"overlay" + (mistakesAllowed === 3 || score === 10 ? " overlay--visible" : "")}>
         <div className="overlay-inner">
-          <p className="end-message"></p>
+          <p className="end-message">{score === 10 ? "Congrats! You won." : "Sorry! You lost."}</p>
           <button className="reset-button">Start Over</button>
         </div>
       </div>
@@ -66,7 +66,7 @@ function App() {
   );
 }
 
-function ProgressBar() {
+function ProgressBar(props) {
   return (
     <div className="progress">
       <div className="boxes">
@@ -81,7 +81,8 @@ function ProgressBar() {
         <div className="box"></div>
         <div className="box"></div>
       </div>
-      <div className="progress-inner"></div>
+      {/* add style with CSS object*/}
+      <div className="progress-inner" style={{ transform: `scaleX(${props.score / 10})` }}></div>
     </div>
   )
 }
