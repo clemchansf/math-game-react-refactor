@@ -2,10 +2,23 @@ import { useState } from 'react'
 import './App.css';
 
 function App() {
+  const [currentProblem, setCurrentProblem] = useState(generateGame)
+
+  function generateNumber(max) {
+    return Math.floor(Math.random() * (max + 1))
+  }
+
+  function generateGame() {
+    return {
+      firstNumber: generateNumber(10),
+      secondNumber: generateNumber(10),
+      operator: ['+', '-', 'x'][generateNumber(2)]
+    }
+  }
   return (
     <>
       <div className="main-ui">
-        <p className="game"></p>
+        <p className="game">{currentProblem.firstNumber} {currentProblem.operator} {currentProblem.secondNumber}</p>
 
         <form action="" className="game-form">
           <input type="text" className="form-field" autoComplete="off" />
